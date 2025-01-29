@@ -1,4 +1,4 @@
-# SubTool
+# Sub_Recon
 
 A simple tool to perform domain-related reconnaissance using various tools.
 
