@@ -14,11 +14,3 @@ Sohrab Kaghazian
    ```bash
    python3 SubTool.py -d <domain>
 
-
-### Explanation:
-- **Developed by Sohrab Kaghazian:** This credits you as the developer.
-- **Usage:** Provides instructions on how to run the script.
-- **Requirements:** Specifies that Python 3.x is needed to run the script.
-- **License:** A simple placeholder for licensing information (can be modified as needed).
-
-You can edit or add more sections as your project evolves!
