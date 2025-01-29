@@ -20,8 +20,13 @@ This script utilizes the following reconnaissance tools:
 ## Usage
 
 1. Install Python 3 if you haven't already. You can download it from the official website: [Python Downloads](https://www.python.org/downloads/).
+   or
+   ```bash
+   sudo apt update
+   sudo apt install python3
+   python3 --version
 
-2. Run the tool with the following command:
+3. Run the tool with the following command:
 
    ```bash
    python3 SubTool.py -d <domain> -w <wordlist.txt> -r <resolver.txt>
