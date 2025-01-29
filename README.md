@@ -29,6 +29,6 @@ This script utilizes the following reconnaissance tools:
 3. Run the tool with the following command:
 
    ```bash
-   python3 SubTool.py -d <domain> -w <wordlist.txt> -r <resolver.txt>
+   python3 Sub_Recon.py -d <domain> -w <wordlist.txt> -r <resolver.txt>
 
 - **Note**: All Packeages are Installed Automatically
