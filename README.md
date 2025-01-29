@@ -26,4 +26,4 @@ This script utilizes the following reconnaissance tools:
    ```bash
    python3 SubTool.py -d <domain> -w <wordlist.txt> -r <resolver.txt>
 
-**Note: All Packeages will Automated Install 
+- **Note: All Packeages will Automated Install 
