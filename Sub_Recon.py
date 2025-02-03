@@ -4,9 +4,24 @@ import time
 import xml.etree.ElementTree as ET
 from typing import Set
 import sys
+from colorama import init, Fore
+
+init(autoreset=True)
+
+def print_success(message):
+    print(Fore.GREEN + f"[+] {message}")
+
+def print_error(message):
+    print(Fore.RED + f"[!] {message}")
+
+def print_warning(message):
+    print(Fore.YELLOW + f"[-] {message}")
+
+def print_info(message):
+    print(Fore.CYAN + f"[i] {message}")
 
 if len(sys.argv) < 5 or sys.argv[1] != '-d' or sys.argv[3] != '-w' or sys.argv[5] != '-r':
-    print("Usage: python3 Sub_Recon.py -d <domain> -w <wordlist.txt> -r <resolver.txt>")
+    print_error("Usage: python3 Sub_Recon.py -d <domain> -w <wordlist.txt> -r <resolver.txt>")
     sys.exit(1)
 
 domain = sys.argv[2]
@@ -37,31 +52,27 @@ def get_installed_version(tool: str) -> str:
 def update_tool(tool: str):
     """Update the tool using its installation method."""
     try:
-        print(f"Updating {tool}...")
+        print_info(f"Updating {tool}...")
         subprocess.run(["sudo", "apt", "install", "--only-upgrade", "-y", tool], check=True)
-        print(f"\n[+] {tool} has been updated successfully.")
+        print_success(f"{tool} has been updated successfully.")
     except Exception as e:
-        print(f"\n[!] Error updating {tool}: {str(e)}")
+        print_error(f"Error updating {tool}: {str(e)}")
 
 def install_required_tools():
     for tool in required_tools:
         try:
             subprocess.run(["which", tool], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            print(f"\n[+] {tool} is already installed.")
-            
+            print_success(f"{tool} is already installed.")
             installed_version = get_installed_version(tool)
             print(f"    Installed version of {tool}: {installed_version}")
-            
             update_tool(tool)
-
         except subprocess.CalledProcessError:
-            print(f"\n[-] {tool} not found. Installing {tool}...")
-
+            print_warning(f"{tool} not found. Installing {tool}...")
             try:
                 subprocess.run(["sudo", "apt", "install", "-y", tool], check=True)
-                print(f"\n[+] {tool} has been installed successfully.")
+                print_success(f"{tool} has been installed successfully.")
             except Exception as e:
-                print(f"\n[!] Error installing {tool}: {str(e)}")
+                print_error(f"Error installing {tool}: {str(e)}")
 
 class SubdomainScanner:
     def __init__(self, domain: str, wordlist: str, resolvers: str):
@@ -95,8 +106,7 @@ class SubdomainScanner:
                     self.subdomains.add(subdomain)
 
         except Exception as e:
-            print(f"\n[!] Knockpy error: {str(e)}")
-
+            print_error(f"Knockpy error: {str(e)}")
 
     def run_sublist3r(self):
         try:
@@ -104,7 +114,6 @@ class SubdomainScanner:
             subprocess.run([
                 "sublist3r",
                 "-v",
-              # "-b", self.domain,
                 "-d", self.domain,
                 "-o", output_file
             ], check=True)
@@ -113,7 +122,7 @@ class SubdomainScanner:
                 self.subdomains.update(line.strip() for line in f if line.strip())
                 
         except Exception as e:
-            print(f"\n[!] Sublist3r error: {str(e)}")
+            print_error(f"Sublist3r error: {str(e)}")
 
     def run_subfinder(self):
         try:
@@ -128,7 +137,7 @@ class SubdomainScanner:
                 self.subdomains.update(line.strip() for line in f if line.strip())
                 
         except Exception as e:
-            print(f"\n[!] Subfinder error: {str(e)}")
+            print_error(f"Subfinder error: {str(e)}")
 
     def run_amass(self):
         try:
@@ -146,7 +155,7 @@ class SubdomainScanner:
                 self.subdomains.update(line.strip() for line in f if line.strip())
                 
         except Exception as e:
-            print(f"\n[!] Amass error: {str(e)}")
+            print_error(f"Amass error: {str(e)}")
 
     def run_assetfinder(self):
         try:
@@ -163,8 +172,7 @@ class SubdomainScanner:
             self.subdomains.update(result.splitlines())
             
         except Exception as e:
-            print(f"\n[!] Assetfinder error: {str(e)}")
-
+            print_error(f"Assetfinder error: {str(e)}")
 
     def run_findomain(self):
         try:
@@ -183,7 +191,7 @@ class SubdomainScanner:
                 self.subdomains.update(line.strip() for line in f if line.strip())
                 
         except Exception as e:
-            print(f"\n[!] Findomain error: {str(e)}")
+            print_error(f"Findomain error: {str(e)}")
 
     def run_dnsrecon(self):
         try:
@@ -204,7 +212,7 @@ class SubdomainScanner:
                         self.subdomains.add(name.strip().lower())
                         
         except Exception as e:
-            print(f"\n[!] DNSrecon error: {str(e)}")
+            print_error(f"DNSrecon error: {str(e)}")
 
     def run_gobuster(self):
         try:
@@ -226,8 +234,7 @@ class SubdomainScanner:
                     self.subdomains.add(line.split(" ")[1])
                     
         except Exception as e:
-            print(f"\n[!] Gobuster error: {str(e)}")
-
+            print_error(f"Gobuster error: {str(e)}")
 
     def run_theharvester(self):
         try:
@@ -250,9 +257,8 @@ class SubdomainScanner:
                     self.subdomains.add(hostname.strip().lower())
                     
         except Exception as e:
-            print(f"\n[!] theHarvester error: {str(e)}")
+            print_error(f"theHarvester error: {str(e)}")
             
-
     def run_all_tools(self):
         tools = [
             self.run_knockpy, 
@@ -266,23 +272,23 @@ class SubdomainScanner:
             self.run_theharvester
         ]
         
-        print(f"\n[*] Starting subdomain enumeration for {self.domain}")
+        print_info(f"\n[*] Starting subdomain enumeration for {self.domain}")
+        
         for tool in tools:
-            print(f"\n[+] Running {tool.__name__}...\n")
+            print_info(f"\n[+] Running {tool.__name__}...")
             start_time = time.time()
             tool()
             elapsed = time.time() - start_time
-            print(f"    Completed in {elapsed:.2f} seconds")
+            print_success(f"Completed in {elapsed:.2f} seconds")
         
         final_file = f"{self.report_dir}/all_subdomains.txt"
         with open(final_file, "w") as f:
             f.write("\n".join(sorted(self.subdomains)))
-            
-        print(f"\n[+] Found {len(self.subdomains)} unique subdomains")
-        print(f"\n[*] Results saved to: {final_file}")
-
+        
+        print_success(f"\n[+] Found {len(self.subdomains)} unique subdomains")
+        print_info(f"\n[*] Results saved to: {final_file}")
 
 if __name__ == "__main__":
-    install_required_tools()
     scanner = SubdomainScanner(domain, wordlist, resolvers)
+    install_required_tools()
     scanner.run_all_tools()
