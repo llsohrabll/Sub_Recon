@@ -21,11 +21,16 @@ This script utilizes the following reconnaissance tools:
 
 1. Install Python 3 if you haven't already. You can download it from the official website: [Python Downloads](https://www.python.org/downloads/).
    or
+   
    ```bash
    sudo apt update
+   ```
+   ```bash
    sudo apt install python3
+   ```
+   ```bash
    python3 --version
-
+   ```
 3. Run the tool with the following command:
 
    ```bash
