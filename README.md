@@ -3,7 +3,7 @@
 A simple tool to perform domain-related reconnaissance using various tools. 🌐🔍
 
 ## 👨‍💻 **Developed by**
-**Sohrab Kaghazian** 👨‍💻
+**Sohrab Kaghazian** 
 
 ## 🛠️ **Tools Used**
 
