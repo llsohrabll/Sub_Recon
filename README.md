@@ -36,4 +36,4 @@ This script utilizes the following reconnaissance tools:
    ```bash
    python3 Sub_Recon.py -d <domain> -w <wordlist.txt> -r <resolver.txt>
 
-- **Note**: All Packeages are Installed Automatically
+- ***Note***: All Packeages are Installed Automatically or Updated if alreadt exist !
