@@ -1,7 +1,6 @@
 import subprocess
 import os
 import time
-import json
 import xml.etree.ElementTree as ET
 from typing import Set
 import sys
@@ -22,17 +21,47 @@ required_tools = [
     "findomain",
     "dnsrecon",
     "gobuster",
-    "theharvester"
+    "theharvester",
+    "knockpy"
 ]
+
+def get_installed_version(tool: str) -> str:
+    """Check the installed version of a tool."""
+    try:
+        result = subprocess.check_output([tool, "--version"], stderr=subprocess.STDOUT)
+        version = result.decode().splitlines()[0]
+        return version
+    except subprocess.CalledProcessError:
+        return None
+
+def update_tool(tool: str):
+    """Update the tool using its installation method."""
+    try:
+        print(f"Updating {tool}...")
+        subprocess.run(["sudo", "apt", "install", "--only-upgrade", "-y", tool], check=True)
+        print(f"\n[+] {tool} has been updated successfully.")
+    except Exception as e:
+        print(f"\n[!] Error updating {tool}: {str(e)}")
 
 def install_required_tools():
     for tool in required_tools:
         try:
             subprocess.run(["which", tool], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            print(f"[+] {tool} is already installed.")
+            print(f"\n[+] {tool} is already installed.")
+            
+            installed_version = get_installed_version(tool)
+            print(f"    Installed version of {tool}: {installed_version}")
+            
+            update_tool(tool)
+
         except subprocess.CalledProcessError:
-            print(f"[-] {tool} not found. Installing {tool}...")
-            subprocess.run(["sudo", "apt", "install", "-y", tool], check=True)
+            print(f"\n[-] {tool} not found. Installing {tool}...")
+
+            try:
+                subprocess.run(["sudo", "apt", "install", "-y", tool], check=True)
+                print(f"\n[+] {tool} has been installed successfully.")
+            except Exception as e:
+                print(f"\n[!] Error installing {tool}: {str(e)}")
 
 class SubdomainScanner:
     def __init__(self, domain: str, wordlist: str, resolvers: str):
@@ -44,11 +73,38 @@ class SubdomainScanner:
         
         os.makedirs(self.report_dir, exist_ok=True)
 
+    def run_knockpy(self):
+        try:
+            output_file = f"{self.report_dir}/knockpy.json"
+            
+            subprocess.run([
+                "knockpy",
+                "-d", self.domain,
+                "--bruteforce",
+                "--json"
+            ], check=True)
+
+            knockpy_json_file = f"{self.domain}.json"
+            if os.path.exists(knockpy_json_file):
+                os.rename(knockpy_json_file, output_file)
+
+            import json
+            with open(output_file, "r") as f:
+                data = json.load(f)
+                for subdomain in data.get("subdomains", []):
+                    self.subdomains.add(subdomain)
+
+        except Exception as e:
+            print(f"\n[!] Knockpy error: {str(e)}")
+
+
     def run_sublist3r(self):
         try:
             output_file = f"{self.report_dir}/sublist3r.txt"
             subprocess.run([
                 "sublist3r",
+                "-v",
+              # "-b", self.domain,
                 "-d", self.domain,
                 "-o", output_file
             ], check=True)
@@ -57,7 +113,7 @@ class SubdomainScanner:
                 self.subdomains.update(line.strip() for line in f if line.strip())
                 
         except Exception as e:
-            print(f"[!] Sublist3r error: {str(e)}")
+            print(f"\n[!] Sublist3r error: {str(e)}")
 
     def run_subfinder(self):
         try:
@@ -72,7 +128,7 @@ class SubdomainScanner:
                 self.subdomains.update(line.strip() for line in f if line.strip())
                 
         except Exception as e:
-            print(f"[!] Subfinder error: {str(e)}")
+            print(f"\n[!] Subfinder error: {str(e)}")
 
     def run_amass(self):
         try:
@@ -80,6 +136,8 @@ class SubdomainScanner:
             subprocess.run([
                 "amass",
                 "enum",
+                "-active",
+                "-brute",
                 "-d", self.domain,
                 "-o", output_file
             ], check=True)
@@ -88,7 +146,7 @@ class SubdomainScanner:
                 self.subdomains.update(line.strip() for line in f if line.strip())
                 
         except Exception as e:
-            print(f"[!] Amass error: {str(e)}")
+            print(f"\n[!] Amass error: {str(e)}")
 
     def run_assetfinder(self):
         try:
@@ -98,10 +156,15 @@ class SubdomainScanner:
                 self.domain
             ]).decode("utf-8")
             
+            output_file = f"{self.report_dir}/assetfinder.txt"
+            with open(output_file, "w") as f:
+                f.write(result)
+
             self.subdomains.update(result.splitlines())
             
         except Exception as e:
-            print(f"[!] Assetfinder error: {str(e)}")
+            print(f"\n[!] Assetfinder error: {str(e)}")
+
 
     def run_findomain(self):
         try:
@@ -120,7 +183,7 @@ class SubdomainScanner:
                 self.subdomains.update(line.strip() for line in f if line.strip())
                 
         except Exception as e:
-            print(f"[!] Findomain error: {str(e)}")
+            print(f"\n[!] Findomain error: {str(e)}")
 
     def run_dnsrecon(self):
         try:
@@ -141,7 +204,7 @@ class SubdomainScanner:
                         self.subdomains.add(name.strip().lower())
                         
         except Exception as e:
-            print(f"[!] DNSrecon error: {str(e)}")
+            print(f"\n[!] DNSrecon error: {str(e)}")
 
     def run_gobuster(self):
         try:
@@ -150,15 +213,21 @@ class SubdomainScanner:
                 "dns",
                 "-d", self.domain,
                 "-w", self.wordlist,
+                "--wildcard",
                 "-q"
             ]).decode("utf-8")
+            
+            output_file = f"{self.report_dir}/gobuster.txt"
+            with open(output_file, "w") as f:
+                f.write(result)
             
             for line in result.splitlines():
                 if "Found: " in line:
                     self.subdomains.add(line.split(" ")[1])
                     
         except Exception as e:
-            print(f"[!] Gobuster error: {str(e)}")
+            print(f"\n[!] Gobuster error: {str(e)}")
+
 
     def run_theharvester(self):
         try:
@@ -167,6 +236,8 @@ class SubdomainScanner:
                 "theHarvester",
                 "-d", self.domain,
                 "-b", "all",
+                "-s",
+                "-c",
                 "-f", output_file
             ], check=True)
             
@@ -179,10 +250,12 @@ class SubdomainScanner:
                     self.subdomains.add(hostname.strip().lower())
                     
         except Exception as e:
-            print(f"[!] theHarvester error: {str(e)}")
+            print(f"\n[!] theHarvester error: {str(e)}")
+            
 
     def run_all_tools(self):
         tools = [
+            self.run_knockpy, 
             self.run_sublist3r,
             self.run_subfinder, 
             self.run_amass,
@@ -193,9 +266,9 @@ class SubdomainScanner:
             self.run_theharvester
         ]
         
-        print(f"[*] Starting subdomain enumeration for {self.domain}")
+        print(f"\n[*] Starting subdomain enumeration for {self.domain}")
         for tool in tools:
-            print(f"[+] Running {tool.__name__}...")
+            print(f"\n[+] Running {tool.__name__}...\n")
             start_time = time.time()
             tool()
             elapsed = time.time() - start_time
@@ -206,10 +279,10 @@ class SubdomainScanner:
             f.write("\n".join(sorted(self.subdomains)))
             
         print(f"\n[+] Found {len(self.subdomains)} unique subdomains")
-        print(f"[*] Results saved to: {final_file}")
+        print(f"\n[*] Results saved to: {final_file}")
+
 
 if __name__ == "__main__":
     install_required_tools()
-
     scanner = SubdomainScanner(domain, wordlist, resolvers)
     scanner.run_all_tools()
