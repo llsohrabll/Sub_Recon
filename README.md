@@ -41,7 +41,7 @@ This script utilizes the following reconnaissance tools:
 2. **🔹 Clone the Repository** (if you haven't already):
 
    ```bash
-   git clone https://github.com/your-repository/Sub_Recon.git
+   git clone https://github.com/llsohrabll/Sub_Recon.git
    cd Sub_Recon
 
 2. **🔹 Usage:
