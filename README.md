@@ -43,8 +43,9 @@ This script utilizes the following reconnaissance tools:
    ```bash
    git clone https://github.com/llsohrabll/Sub_Recon.git
    cd Sub_Recon
-
+   ```
 3. **🔹 Usage:
 
    ```bash
    python3 Sub_Recon.py -d <domain> -w <wordlist.txt> -r <resolver.txt>
+   ```
