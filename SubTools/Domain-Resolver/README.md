@@ -4,7 +4,7 @@
 sudo apt-get install dnsutils
 ```
 ```bash
-python3 resolve_domains.py -p domains.txt
+python3 Domain_Resolver.py -p domains.txt
 ```
 - **output:**
 ```bash
