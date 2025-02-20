@@ -32,11 +32,11 @@ This script utilizes the following reconnaissance tools:
    - Download it from the official website: [Python Downloads](https://www.python.org/downloads/). 🌐
    - Alternatively, run the following commands to install it on Linux-based systems (Ubuntu/Debian):
 
-     ```bash
-     sudo apt update
-     sudo apt install python3
-     python3 --version
-     ```
+   ```bash
+   sudo apt update
+   sudo apt install python3
+   python3 --version
+   ```
 
 2. **🔹 Clone the Repository** (if you haven't already):
 
@@ -44,7 +44,7 @@ This script utilizes the following reconnaissance tools:
    git clone https://github.com/llsohrabll/Sub_Recon.git
    cd Sub_Recon
 
-2. **🔹 Usage:
+3. **🔹 Usage:
 
    ```bash
    python3 Sub_Recon.py -d <domain> -w <wordlist.txt> -r <resolver.txt>
