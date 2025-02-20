@@ -9,15 +9,15 @@ A simple tool to perform domain-related reconnaissance using various tools. 🌐
 
 This script utilizes the following reconnaissance tools:
 
-- **🔑 Sublist3r** – A fast subdomain enumeration tool for penetration testers.
-- **🕵️‍♂️ Subfinder** – A tool for discovering subdomains using passive sources.
-- **⚡ Amass** – A powerful open-source tool for network mapping of attack surfaces and external assets.
-- **🔍 Assetfinder** – A tool to find assets related to a given domain.
-- **🚀 Findomain** – A fast subdomain discovery tool that supports multiple passive sources.
-- **📡 Dnsrecon** – A DNS reconnaissance tool to gather DNS-related information about domains.
-- **📂 Gobuster** – A tool for directory and subdomain busting using wordlist-based brute-forcing.
-- **🧑‍💻 TheHarvester** – A tool for gathering information from public sources such as search engines, social media, and more.
-- **🔨 Knockpy** – A subdomain brute-force tool that uses a wordlist to find subdomains for a given domain.
+**🔑 Sublist3r** – A fast subdomain enumeration tool for penetration testers.
+**🕵️‍♂️ Subfinder** – A tool for discovering subdomains using passive sources.
+**⚡ Amass** – A powerful open-source tool for network mapping of attack surfaces and external assets.
+**🔍 Assetfinder** – A tool to find assets related to a given domain.
+**🚀 Findomain** – A fast subdomain discovery tool that supports multiple passive sources.
+**📡 Dnsrecon** – A DNS reconnaissance tool to gather DNS-related information about domains.
+**📂 Gobuster** – A tool for directory and subdomain busting using wordlist-based brute-forcing.
+**🧑‍💻 TheHarvester** – A tool for gathering information from public sources such as search engines, social media, and more.
+**🔨 Knockpy** – A subdomain brute-force tool that uses a wordlist to find subdomains for a given domain.
 
 ## ✨ **Features**
 
