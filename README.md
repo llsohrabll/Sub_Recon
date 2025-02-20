@@ -30,7 +30,7 @@ This script utilizes the following reconnaissance tools:
 1. **🔹 Install Python 3** (if you haven't already):
 
    - Download it from the official website: [Python Downloads](https://www.python.org/downloads/) 🌐
-   - Alternatively, install it on Linux-based systems (Ubuntu/Debian):
+   - Alternatively, install it on system (***Kali***):
 
    ```bash
    sudo apt update
