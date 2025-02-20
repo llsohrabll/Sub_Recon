@@ -44,18 +44,13 @@ This script utilizes the following reconnaissance tools:
    sudo apt update
    sudo apt install python3
    python3 --version
-   
 2. **🔹 Clone the Repository:**
-
    ```bash
    git clone https://github.com/llsohrabll/Sub_Recon.git
    cd Sub_Recon
-   
 3. **🔹 Usage:**
-
    ```bash
    python3 Sub_Recon.py -d <domain> -w <wordlist.txt> -r <resolver.txt>
-
 ## 📜 More Info
 - If you want to analyze your outputs further, visit SubTools at:
 - **🔗 SubTools Repository** --> https://github.com/llsohrabll/Sub_Recon/tree/main/SubTools
