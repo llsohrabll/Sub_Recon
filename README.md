@@ -53,5 +53,5 @@ This script utilizes the following reconnaissance tools:
    python3 Sub_Recon.py -d <domain> -w <wordlist.txt> -r <resolver.txt>
 ## 📜 More Info
 - If you want to analyze your outputs further, visit SubTools at:
-- 
+  
 **🔗 SubTools Repository** --> https://github.com/llsohrabll/Sub_Recon/tree/main/SubTools
