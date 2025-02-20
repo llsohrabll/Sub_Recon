@@ -1,4 +1,4 @@
-Network Scanner
+Range IP Scanner
 ==============
 
 This Python script scans a given CIDR range, pings each IP address, retrieves its hostname, 
