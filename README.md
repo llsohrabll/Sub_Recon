@@ -1,6 +1,6 @@
 #  **Sub_Recon** 
 
-#  **Onley work on Kali linux** 
+#  **Only work on Kali linux** 
 
 A simple tool to perform domain-related reconnaissance using various tools.
 
